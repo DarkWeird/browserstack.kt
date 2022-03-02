@@ -22,7 +22,7 @@ jobs:
         run: sudo apt-get install libcurl3-dev
       - name: Install needed software (Windows)
         if: ${{ matrix.os == 'windows-latest' }}
-        run: vcpkg install curl
+        run: vcpkg install curl:x64-windows
       - name: Install needed software (Mac)
         if: ${{ matrix.os == 'macOS-latest' }}
         run: vcpkg install curl
