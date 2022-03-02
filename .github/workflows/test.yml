@@ -17,6 +17,8 @@ jobs:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
     steps:
+      - name: Install needed software
+        run: sudo apt-get install curl
       - name: Check out
         uses: actions/checkout@v2
       - name: Cached Konan
