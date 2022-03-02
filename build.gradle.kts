@@ -1,6 +1,7 @@
 plugins {
     kotlin("multiplatform") version "1.6.20-M1"
     kotlin("plugin.serialization") version "1.6.0"
+    `maven-publish`
 }
 
 group = "me.darkweird"
@@ -112,5 +113,20 @@ kotlin {
             }
         }
         val nativeTest by getting
+    }
+}
+
+
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/Darkweird/browserstack.kt/")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
 }
