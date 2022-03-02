@@ -17,8 +17,15 @@ jobs:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
     steps:
-      - name: Install needed software
+      - name: Install needed software (Ubuntu)
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: sudo apt-get install libcurl3-dev
+      - name: Install needed software (Windows)
+        if: ${{ matrix.os == 'windows-latest' }}
         run: vcpkg install curl
+      - name: Install needed software (Mac)
+        if: ${{ matrix.os == 'macOS-latest' }}
+        run: brew install libcurl
 
       - name: Check out
         uses: actions/checkout@v2
