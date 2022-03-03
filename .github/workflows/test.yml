@@ -10,7 +10,6 @@ on:
       - '!./github/workflow/test.yml'
 
 jobs:
-
   check:
     runs-on: ${{ matrix.os }}
     strategy:
