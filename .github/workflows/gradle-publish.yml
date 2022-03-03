@@ -12,8 +12,7 @@ on:
     types: [created]
 
 jobs:
-
-  check:
+  publish:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
