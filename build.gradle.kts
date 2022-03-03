@@ -50,6 +50,7 @@ kotlin {
             }
         }
     }
+
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
     val nativeTarget = when {
@@ -104,8 +105,13 @@ kotlin {
         val jsTest by getting
         val nativeMain by getting {
             dependencies {
-                // TODO replace with CIO when will support tls
-                implementation("io.ktor:ktor-client-curl:$ktorVersion")
+                when {
+                    hostOs == "Mac OS X" ->  implementation("io.ktor:ktor-client-darwin:$ktorVersion")
+                    hostOs == "Linux" ->  implementation("io.ktor:ktor-client-curl:$ktorVersion")
+                    isMingwX64 ->  implementation("io.ktor:ktor-client-winhttp:$ktorVersion")
+                    else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
+                }
+
             }
         }
         val nativeTest by getting
