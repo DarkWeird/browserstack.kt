@@ -41,16 +41,12 @@ kotlin {
                 cssSupport.enabled = true
             }
             testTask {
-                useMocha {
-                    timeout = "10s"
-                }
+                useMocha()
             }
         }
         nodejs {
             testTask {
-                useMocha {
-                    timeout = "10s"
-                }
+                useMocha()
             }
         }
     }
