@@ -25,15 +25,33 @@ class BrowserStackApi private constructor(
 ) {
 
     companion object {
+
+        /**
+         * Create with default ktor's HttpEngine.
+         */
         fun create(username: String, accessKey: String): BrowserStackApi =
             BrowserStackApi(HttpClient { installNeeded(username, accessKey) })
 
+        /**
+         * Create with default ktor's HttpEngine and provided configuration
+         */
         fun create(username: String, accessKey: String, httpConfig: HttpClientConfig<*>.() -> Unit): BrowserStackApi =
             BrowserStackApi(HttpClient {
                 httpConfig(this)
                 installNeeded(username, accessKey)
             })
 
+        /**
+         * create with self-configured HttpClient.
+         *
+         * Note: http client should have preconfigured Json and basic auth.
+         */
+        fun create(httpClient: HttpClient): BrowserStackApi =
+            BrowserStackApi(httpClient)
+
+        /**
+         * Create with choosen ktor's HttpEngine and provided configuration
+         */
         fun <T : HttpClientEngineConfig> create(
             username: String,
             accessKey: String,
