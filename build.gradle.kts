@@ -4,14 +4,11 @@ plugins {
     `maven-publish`
 }
 
-group = "me.darkweird"
-version = "0.2.0"
+group = "io.github.darkweird"
+version = "0.3.0"
 
 repositories {
     mavenCentral()
-    maven {
-        url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap")
-    }
 }
 
 val ktorVersion = "2.0.0-beta-1"
@@ -41,16 +38,12 @@ kotlin {
                 cssSupport.enabled = true
             }
             testTask {
-                useMocha {
-                    timeout = "10s"
-                }
+                useMocha()
             }
         }
         nodejs {
             testTask {
-                useMocha {
-                    timeout = "10s"
-                }
+                useMocha()
             }
         }
     }
