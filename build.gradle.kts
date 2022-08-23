@@ -6,13 +6,13 @@ plugins {
 }
 
 group = "io.github.darkweird"
-version = "0.3.0"
+version = "0.3.1"
 
 repositories {
     mavenCentral()
 }
 
-val ktorVersion = "2.0.0-beta-1"
+val ktorVersion = "2.1.0"
 
 kotlin {
     targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget>().all {
