@@ -1,7 +1,8 @@
 plugins {
     kotlin("multiplatform") version "1.6.20-M1"
-    kotlin("plugin.serialization") version "1.6.0"
+    kotlin("plugin.serialization") version "1.6.20-M1"
     `maven-publish`
+    signing
 }
 
 group = "io.github.darkweird"
@@ -25,10 +26,10 @@ kotlin {
         compilations.all {
             kotlinOptions.jvmTarget = "1.8"
         }
-        withJava()
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
         }
+
     }
     ios()
 
@@ -109,16 +110,79 @@ kotlin {
     }
 }
 
+val emptyJar = tasks.register<Jar>("emptyJar") {
+    archiveAppendix.set("empty")
+}
 
+signing {
+    val signingKey: String? by project
+    val signingPassword: String? by project
+    extra["signing.gnupg.keyName"] = signingKey
+    extra["signing.gnupg.passphrase"] = signingPassword
+    useGpgCmd()
+    sign(the<PublishingExtension>().publications)
+}
 
 publishing {
     repositories {
+        val ossUser: String? by project
+        val ossPass: String? by project
         maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/Darkweird/browserstack.kt/")
+            name = "sonatypeStaging"
+            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
             credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
+                username = ossUser
+                password = ossPass
+            }
+        }
+    }
+
+    publications {
+        withType<MavenPublication> {
+            pom {
+                name.set(rootProject.name)
+                description.set("Async BrowserStack API client in pure Kotlin/MPP")
+                url.set("https://github.com/DarkWeird/browserstack.kt")
+
+                licenses {
+                    license {
+                        name.set("MIT")
+                        url.set("https://opensource.org/licenses/MIT")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("DarkWeird")
+                        name.set("Nail Khanipov")
+                        email.set("foxflameless@gmail.com")
+                    }
+                }
+
+                scm {
+                    developerConnection.set("https://github.com/DarkWeird/browserstack.kt.git")
+                    connection.set("https://github.com/DarkWeird/browserstack.kt.git")
+                    url.set("https://github.com/DarkWeird/browserstack.kt")
+                }
+            }
+        }
+        kotlin.targets.forEach { target ->
+            val publication = publications.findByName(target.name) as? MavenPublication ?: return@forEach
+
+            if (target.platformType.name == "jvm") {
+                publication.artifact(emptyJar) {
+                    classifier = "javadoc"
+                }
+            } else {
+                publication.artifact(emptyJar) {
+                    classifier = "javadoc"
+                }
+                publication.artifact(emptyJar) {
+                    classifier = "kdoc"
+                }
+            }
+
+            if (target.platformType.name == "native") {
+                publication.artifact(emptyJar)
             }
         }
     }

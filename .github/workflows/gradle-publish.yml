@@ -9,14 +9,14 @@ name: Gradle Package
 
 on:
   release:
-    types: [created]
+    types: [ created ]
 
 jobs:
   publish:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macOS-latest]
+        os: [ ubuntu-latest, macOS-latest ]
     steps:
       - name: Install needed software (Ubuntu)
         if: ${{ matrix.os == 'ubuntu-latest' }}
@@ -55,5 +55,7 @@ jobs:
         with:
           arguments: publish
         env:
-          GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG}}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASS}}
+          ORG_GRADLE_PROJECT_ossUser: ${{ secrets.OSS_USER }}
+          ORG_GRADLE_PROJECT_ossPass: ${{ secrets.OSS_PASS }}
